@@ -1,0 +1,17 @@
+# Intellij
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Compiled files
+/target/
+/bin/
+/build/
+
+# Package files
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
