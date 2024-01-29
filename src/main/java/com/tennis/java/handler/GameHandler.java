@@ -4,6 +4,7 @@ import com.tennis.java.pojo.GameStatus;
 import com.tennis.java.pojo.Player;
 import lombok.Getter;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import org.slf4j.Logger;
@@ -22,8 +23,8 @@ public class GameHandler {
     private final Scanner scanner = new Scanner(System.in);
 
 
-    public GameHandler(Player player, Player player2) {
-        this.player = player;
+    public GameHandler(Player player1, Player player2) {
+        this.player = player1;
         this.player2 = player2;
         this.gameSetCount = 1;
         this.gameStatus = new GameStatus(false, false, false);
@@ -32,7 +33,7 @@ public class GameHandler {
 
     public void startGame(Player player1, Player player2) {
         if (isGameFinished(player1, player2)) {
-            handleGameFinish(player1, player2);
+            handleGame(player1, player2);
         } else {
             logger.info("\nScore in single game is \n{}:{}\n{}:{}",
                     player1.getName(), getScoreDescription(player1.getScore()),
@@ -46,7 +47,7 @@ public class GameHandler {
     }
 
 
-    private void handleGameFinish(Player player1, Player player2) {
+    private void handleGame(Player player1, Player player2) {
         int scoreDifference = player1.getScore() - player2.getScore();
 
         if (Math.abs(scoreDifference) >= 2) {
@@ -82,25 +83,29 @@ public class GameHandler {
         };
     }
 
-
-    //TODO should add try catch and throw exceptions if invalid input or not integer
     public void initializeGame(Player player1, Player player2) {
 
         GameHandler gameHandler = new GameHandler(player1, player2);
 
         while (!gameHandler.getGameStatus().isGameFinished()) {
 
-            logger.info("Please enter 1 to assign a point to {} and 2 to assign to point to {}", player1.getName(), player2.getName());
-            int a = scanner.nextInt();
+            try {
+                logger.info("Please enter 1 to assign a point to {} and 2 to assign to point to {}", player1.getName(), player2.getName());
+                int input = scanner.nextInt();
 
-            if (a == 1) {
-                player1.incrementScore();
-            }
-            if (a == 2) {
-                player2.incrementScore();
-            }
+                if (input == 1) {
+                    player1.incrementScore();
+                } else if (input == 2) {
+                    player2.incrementScore();
+                } else {
+                    logger.warn("Invalid input. Please enter either 1 or 2.");
+                }
 
-            gameHandler.startGame(player1, player2);
+                gameHandler.startGame(player1, player2);
+            } catch (InputMismatchException e) {
+                logger.error("Invalid input. Please enter a valid integer.");
+                scanner.next();
+            }
         }
     }
 }

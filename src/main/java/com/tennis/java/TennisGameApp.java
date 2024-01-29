@@ -9,6 +9,6 @@ public class TennisGameApp {
 
         TennisGameService tennisGameService = new TennisGameService();
 
-        tennisGameService.startSet();
+        tennisGameService.start();
     }
 }

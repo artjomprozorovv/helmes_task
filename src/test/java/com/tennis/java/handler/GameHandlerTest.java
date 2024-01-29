@@ -14,7 +14,7 @@ class GameHandlerTest {
 
     @BeforeEach
     void setUp() {
-         player1 = new Player("Player1");
+        player1 = new Player("Player1");
         player2 = new Player("Player2");
         gameHandler = new GameHandler(player1,player2);
 
@@ -76,6 +76,39 @@ class GameHandlerTest {
         assertEquals(1, player1.getGamesWon());
         assertEquals(0, player2.getGamesWon());
     }
+
+    @Test
+    void testThatAdvantageCanOnlyAppearAfterDeuce() {
+        player1.incrementScore();
+        player1.incrementScore();
+        player1.incrementScore();
+        player1.incrementScore();
+
+        player2.incrementScore();
+        player2.incrementScore();
+        player2.incrementScore();
+
+        gameHandler.startGame(player1, player2);
+
+        assertFalse(gameHandler.getGameStatus().isGameFinished());
+        assertTrue(gameHandler.getGameStatus().isAdvantage());
+
+        assertEquals(0, player1.getGamesWon());
+        assertEquals(0, player2.getGamesWon());
+    }
+
+    @Test
+    void testPlayerCannotBeInAdvantageStateBeforeDeuce(){
+        player1.incrementScore();
+        player1.incrementScore();
+
+        player2.incrementScore();
+        gameHandler.startGame(player1, player2);
+
+        assertFalse(gameHandler.getGameStatus().isGameFinished());
+        assertFalse(gameHandler.getGameStatus().isAdvantage());
+    }
+
 
     @Test
     void testGameHandlerInitialization() {
