@@ -8,7 +8,7 @@
 
 ### `Services`
 - `TennisGame Service`
-- 
+  
 #### Start
 - To start simply head to `TennisGameApp` and run main method.
 
