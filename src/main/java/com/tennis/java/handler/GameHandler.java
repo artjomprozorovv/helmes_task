@@ -1,9 +1,9 @@
 package com.tennis.java.handler;
 
+import com.tennis.java.TennisGameDataWriter;
 import com.tennis.java.pojo.GameStatus;
 import com.tennis.java.pojo.Player;
 import lombok.Getter;
-
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -14,12 +14,15 @@ import org.slf4j.LoggerFactory;
 public class GameHandler {
 
     private final static Logger logger = LoggerFactory.getLogger(GameHandler.class);
+    private final String RESULT_FORMAT = "Game Result: %s vs %s - Score: %d-%d%n";
+    private final String TENNIS_GAMES_RECORDED_DATA = "src/main/resources/tennisGameData.txt";
+    private final TennisGameDataWriter dataWriter = new TennisGameDataWriter();
 
     private final Player player;
     private final Player player2;
     private int gameSetCount;
-    private final int MINIMUM_SCORE_TO_WIN = 4;
     private final GameStatus gameStatus;
+    private final int MINIMUM_SCORE_TO_WIN = 4;
     private final Scanner scanner = new Scanner(System.in);
 
 
@@ -55,9 +58,10 @@ public class GameHandler {
             gameStatus.setGameFinished(true);
             winner.incrementGamesWon();
             logger.info("Game finished: {} scored 4 points and was ahead by 2 points", winner.getName());
-            logger.info("Current score in set " + player1.getGamesWon() + " : " + player2.getGamesWon() + " " + winner.getName());
+            logger.info("Current score" + player1.getGamesWon() + " : " + player2.getGamesWon());
 
             gameSetCount++;
+            dataWriter.save(player1, player2);
             resetScores(player1, player2);
 
         } else if (scoreDifference == 1 || scoreDifference == -1) {
